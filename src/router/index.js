@@ -12,7 +12,7 @@ export default new Router({
       },
       children: [
         {
-          path: '/framework/answer',
+          path: '/answer',
           name: 'Answer',
           component: resolve => require(['@/components/Answer'], resolve),
           meta: {
@@ -64,16 +64,16 @@ export default new Router({
           path: '/course/detail',
           name: 'courseDetail',
           component: resolve => require(['@/components/CourseDetail'], resolve),
-          meta: {
-            keepAlive: true
-          }
+          // meta: {
+          //   keepAlive: true
+          // }
         }, {
-          path: '/course/changed',
-          name: 'ChangeCourse',
-          component: resolve => require(['@/components/ChangeCourse'], resolve),
-          meta: {
-            keepAlive: true
-          }
+          path: '/course/edit',
+          name: 'EditCourse',
+          component: resolve => require(['@/components/EditCourse'], resolve),
+          // meta: {
+          //   keepAlive: true
+          // }
         }, {
           path: '/user',
           name: 'user',
@@ -81,14 +81,6 @@ export default new Router({
           meta: {
             keepAlive: true
           }
-        },{
-          path: '/CourseDetail',
-          name: 'CourseDetail',
-          component: resolve => require(['@/components/CourseDetail'], resolve),
-          meta: {
-            keepAlive: true
-          }
-
         }
       ]
     },

@@ -1,85 +1,75 @@
 <template>
-  <el-container>
-
-    <el-header class="head" style="margin-bottom: 0px">
-      <el-page-header @back="goBack" :content="name">
-      </el-page-header>
+  <div style="margin: 0;padding: 0;width: 83%">
+    <el-header class="head">
+      <el-page-header @back="goBack" :content="name"/>
+      <el-button type="primary" icon="el-icon-edit" circle @click="editCourse"/>
     </el-header>
-
-    <el-main class="content" style="margin-top: 0px">
-      <el-card shadow="never" style="margin-bottom: 30px;">
-        <div class="det" >
-        <div v-html="content" ></div>
-       </div>
-      </el-card>
-
-
-    </el-main>
-  </el-container>
+    <div class="content">
+      <div v-html="content"></div>
+    </div>
+  </div>
 </template>
 
 <script>
 
-    import {reqgetCoursedetail} from "../api";
-
-    export default {
-      name: "CourseDetail",
-      data() {
-        return {
-          id: 0,
-          name: "",
-          content: "空空如也",
-          height: "500px",
-
-        }
-      },
-      methods: {
-        goBack() {
-          this.$router.back();
-        },
-        async getData() {
-          console.log("11111")
-          let result = await reqgetCoursedetail(this.id);
-          console.log(result)
-          if (result.code === 200) {
-            this.content = result.data.content;
-
-          } else {
-            this.$message.error('出错了！' + result.code + ":" + result.data);
-          }
-        },
-
-
-
-      },
-      created() {
-        console.log("222")
-        this.id = this.$route.query.id;
-        this.name = this.$route.query.name;
-        this.getData();
-
-      },
-      beforeMount() {
-        let h = document.documentElement.clientHeight || document.body.clientHeight;
-        this.height = h - 190 + "px";
+  import {reqgetCoursedetail} from "../api";
+  import global from "../api/global";
+  export default {
+    name: "CourseDetail",
+    data() {
+      return {
+        id: 0,
+        name: "",
+        content:""
       }
+    },
+    methods: {
+      goBack() {
+        this.$router.back();
+      },
+      async getData() {
+        let result = await reqgetCoursedetail(this.id);
+        if (result.code === 200) {
+          this.content = result.data.content;
+          global.course.id=this.id;
+          global.course.name=this.name;
+          global.course.content=this.content;
+        } else {
+          global.course={};
+          this.$message.error('出错了！' + result.code + ":" + result.data);
+        }
+      },editCourse(){
+        this.$router.push({path: "/course/edit"});
+      }
+    },
+    created() {
+      this.id = this.$route.query.id;
+      this.name = this.$route.query.name;
+      this.getData();
     }
+  }
 </script>
 
 <style scoped>
-  .det{
-    height: 570px;
-    overflow:scroll;
-    overflow-x:hidden;
-  }
-  .head {
-    height: 30px;
+  .content {
+    border-radius: 0 0 8px 8px;
     background-color: white;
-    width: 100%;
-    margin-bottom: 0;
+    margin: 0 2%;
+    padding: 1%;
+    height: 78vh;
+    overflow: scroll;
+    overflow-x: hidden;
+    width: 95%;
   }
-.content{
-  margin-top: 0;
-}
+
+  .head {
+    border-radius: 8px 8px 0 0;
+    width: 97%;
+    margin: 2% 1% 0 2%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
 </style>

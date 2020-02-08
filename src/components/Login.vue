@@ -1,143 +1,98 @@
 <template>
   <div id="container">
-  <div id="back">
-    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px"
-             class="demo-ruleForm">
-      <div id="title1"><span id="title">账号登录</span></div>
+    <div id="back">
+      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px"
+               class="demo-ruleForm">
+        <div id="title1"><span id="title">账号登录</span></div>
 
-      <el-form-item label="用户名" prop="name">
-        <el-input type="text" v-model="ruleForm.name" autocomplete="off" class="in"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="pass">
-        <el-input type="password" v-model="ruleForm.pass" autocomplete="off" class="in"></el-input>
-      </el-form-item>
+        <el-form-item label="用户名" prop="name">
+          <el-input type="text" v-model="ruleForm.name" autocomplete="off" class="in"/>
+        </el-form-item>
+        <el-form-item label="密码" prop="pass">
+          <el-input type="password" v-model="ruleForm.pass" autocomplete="off" class="in"/>
+        </el-form-item>
 
 
-      <el-form-item id="foot">
-        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
-      </el-form-item>
-    </el-form>
-  </div></div>
+        <el-form-item id="foot">
+          <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </div>
 
 </template>
 
 <script>
   import {reqPwdLogin} from "../api";
-import global from "../api/global";
+  import global from "../api/global";
+
   export default {
     data() {
-      var checkName = (rule, value, callback) => {
+      const checkName = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('用户名不能为空'));
         }
-          callback();
-
+        callback();
       };
 
-      var validatePass = (rule, value, callback) => {
+      const validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
-        } else {
-          if (this.ruleForm.checkPass !== '') {
-            this.$refs.ruleForm.validateField('checkPass');
-          }
-          callback();
         }
+        callback();
       };
 
       return {
-
         ruleForm: {
-          name:'',
+          name: '',
           pass: '',
-
-
         },
         rules: {
-
           pass: [
-            { validator: validatePass, trigger: 'blur' }
+            {validator: validatePass, trigger: 'blur'}
           ],
-
           name: [
-            { validator: checkName, trigger: 'blur' }
+            {validator: checkName, trigger: 'blur'}
           ],
         }
       };
     },
     methods: {
       async submitForm(formName) {
-
         let result;
-
         this.$refs[formName].validate(async (valid) => {
-
           if (valid) {
-
-           // alert("登录成功");
+            // alert("登录成功");
             //发送请求
-            let username=this.ruleForm.name;
-            let password=this.ruleForm.pass;
+            let username = this.ruleForm.name;
+            let password = this.ruleForm.pass;
             let time = new Date().getTime();
             // console.log(time);
             const fun_aes = require("../api/aes.js");
             let srcs = fun_aes.CryptoJS.enc.Utf8.parse(password);
-            var key = fun_aes.CryptoJS.enc.Utf8.parse(require("../api/md5.js").hex_md5(time.toString()));
-            var encrypted = fun_aes.CryptoJS.AES.encrypt(srcs, key, {
+            const key = fun_aes.CryptoJS.enc.Utf8.parse(require("../api/md5.js").hex_md5(time.toString()));
+            const encrypted = fun_aes.CryptoJS.AES.encrypt(srcs, key, {
               mode: fun_aes.CryptoJS.mode.ECB,
               padding: fun_aes.CryptoJS.pad.Pkcs7
             });
             password = require("../api/base64.js").Base64.encode(encrypted.toString());
-           result = await reqPwdLogin({username, password,time});
-           // console.log("1111111111"+ JSON.stringify(result));
-           // JSON.stringify(result)
-
-            // if(result.code===200){
-            //   if(result.data===''){
-            //     alert("登录失败");
-            //     console.log(result.code+":"+result.data);
-            //     this.$router.replace('/login')
-            //
-            //   }else{
-            //     alert("登录成功");
-            //     this.$router.replace('/answer')
-            //   }
-            // }else{
-            //   alert("登录失败");
-            //   console.log(result.code+":"+result.data);
-            //   this.$router.replace('/login')
-            // }
-
-
-            if(result.code!==200){
-
-              this.$message.error('登录失败！'+result.code+":"+result.data);
-
+            result = await reqPwdLogin({username, password, time});
+            if (result.code !== 200) {
+              this.$message.error('登录失败！' + result.code + ":" + result.data);
               return;
-
             }
-            if(result.code===200){
-              if(result.data===''){
-                this.$message.error('登录失败！'+result.code+":"+result.data);
-
-              }else{
-                global.token=result.data.token;
-
+            if (result.code === 200) {
+              if (result.data === '') {
+                this.$message.error('登录失败！' + result.code + ":" + result.data);
+              } else {
+                global.token = result.data.token;
                 this.$message.success("登录成功！");
-                await this.$router.replace('/framework/answer');
+                await this.$router.replace('/answer');
               }
             }
-
-
-
-
-
-
-
-
           } else {
-            console.log('error submit!!');
+            // console.log('error submit!!');
             return false;
           }
         });
@@ -149,39 +104,41 @@ import global from "../api/global";
   }
 </script>
 <style scoped>
-  #title1{
+  #title1 {
     color: #666;
     font-size: 14px;
     font-style: normal;
     padding: 24px 30px 10px;
     text-align: center;
   }
-  #title{
+
+  #title {
     display: inline-block;
     width: 100%;
     line-height: 18px;
     font-size: 18px;
-    font-family: PingFangSC-Medium;
+    font-family: PingFangSC-Medium, serif;
     color: #252B3A;
   }
-  #back{
+
+  #back {
     width: 380px;
     display: flex;
     background-color: #fff;
     color: #C1C1C1;
     font-size: 14px;
-    border-color: rgba(228,228,228,1);
+    border-color: rgba(228, 228, 228, 1);
     border-radius: 0;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,.1);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, .1);
 
   }
-#foot{
-  text-align: center;
-}
-  .el-input{
-    width: 230px;
+
+  #foot {
+    text-align: center;
   }
-  #container{width: 100%;
+
+  #container {
+    width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
