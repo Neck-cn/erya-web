@@ -87,6 +87,9 @@
                 this.$message.error('登录失败！' + result.code + ":" + result.data);
               } else {
                 global.token = result.data.token;
+
+                this.$cookies.set("token",global.token,result.data.expiretime);
+               //localStorage.setItem("token",global.token);
                 this.$message.success("登录成功！");
                 await this.$router.replace('/answer');
               }

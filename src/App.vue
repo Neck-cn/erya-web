@@ -9,13 +9,25 @@
 </template>
 
 <script>
+  import global from "./api/global";
   export default {
     name: 'App',
     data() {
       return {
       }
     },
-    methods: {}
+    methods: {},
+    created() {
+
+      let token= this.$cookies.get("token");
+
+      if(token){
+        global.token=token;
+        this.$router.replace("/answer");
+      }else{
+        this.$router.replace("/login");
+      }
+    }
   }
 </script>
 

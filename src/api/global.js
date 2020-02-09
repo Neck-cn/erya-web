@@ -3,5 +3,5 @@ let course={};
 
 export default {
   token,
-  course
+  course,
 }

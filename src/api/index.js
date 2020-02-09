@@ -84,6 +84,9 @@ export const reqsetNotice= (notice) =>{return ajax(`${BASE_URL}/admin/notice/set
 export const reqsetDeploy= (deploy) =>{return ajax(`${BASE_URL}/admin/notice/setDeploy`,{deploy},'POST',  'application/x-www-form-urlencoded')};
 //39、获取课程详情
 export const reqgetCoursedetail=(id) =>{return ajax(`${BASE_URL}/admin/course/getCourse/${id}`,{},'POST',  'application/x-www-form-urlencoded')};
+//40、修改课程详情
+export const reqCoursemodify=(course) =>{return ajax(`${BASE_URL}/admin/course/modify`,course,'POST')};
+
 
 
 

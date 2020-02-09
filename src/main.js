@@ -16,6 +16,9 @@ const Vue =require('vue');
 // Vue.prototype.$qs = qs;
 // Vue.config.productionTip = false;
 
+const $cookies=require('vue-cookies');
+Vue.use($cookies);
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
