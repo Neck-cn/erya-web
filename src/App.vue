@@ -7,6 +7,7 @@
     <!--        <router-view v-if="!$route.meta.keepAlive"></router-view>-->
   </div>
 </template>
+fds
 
 <script>
   import global from "./api/global";
